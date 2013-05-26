@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jstl/core">
+	<h:head>
+		<h:outputStylesheet library="css" name="stylesheet.css"/>
+		<title>Bienvenue dans l'administration du RiderShop</title>
+	</h:head>      
+	<body>	
+	<h1>Here is the list of GetBuzee users...</h1> 	
+	<h:dataTable
+					var="person"
+					value="#{personManager.allPersons}">
+					<h:column>
+						<f:facet name="header">	
+							<h:outputText value="user"/>
+						</f:facet>
+						<h:outputText value="#{person.login}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="action"/>
+						</f:facet>
+						<h:form>
+                        	<h:commandLink value="addFriend" actionListener="#{personManager.addOrConfirmFriend}" action="main">
+								<f:param name="friendAdded" id="friendAdded" value="#{person}" />
+                        	</h:commandLink>	
+                        </h:form>						
+					</h:column>
+	</h:dataTable>	
+	<h1>Here is the list of your friends</h1> 	
+	<h:dataTable
+					var="friend"
+					value="#{personManager.myFriends}">
+					<h:column>
+						<f:facet name="header">	
+							<h:outputText value="user"/>
+						</f:facet>	
+						<h:outputText value="#{friend.login}"/>
+					</h:column>
+	</h:dataTable>														          			
+	</body>
+</html>          
