@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import utils.Loggable;
@@ -112,6 +113,15 @@ public class PersonService implements Serializable {
 
         return person;
     }
+    
+    public void removeFriend(final Person friend1,final Person friend2){
+    	Query q = em.createNativeQuery("delete from friendship where (friendsiasked_id= ? and friendsaskedme_id= ?) or (friendsiasked_id= ? and friendsaskedme_id= ?)");
+    	q.setParameter(1, friend1.getPersonId());
+    	q.setParameter(2, friend2.getPersonId());
+    	q.setParameter(3, friend2.getPersonId());
+    	q.setParameter(4, friend1.getPersonId());
+    	q.executeUpdate();
+    }
 
     public void removePerson(final Person person) {
         if (person == null)
@@ -121,7 +131,7 @@ public class PersonService implements Serializable {
     }    
     
     public void dropTablePerson(){
-    	em.createNativeQuery("delete from person p");
+    	em.createQuery("delete from person p").executeUpdate();
     }
 
 	public List<Person> getAllPersons() {

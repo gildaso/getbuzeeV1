@@ -43,13 +43,13 @@ public class Person implements Serializable{
 	private String firstName;
 	private String name;
 	private String email;
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSASKEDME_ID",referencedColumnName="personId"),
 		inverseJoinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"))
 	private List<Person> friendsAskedMe = new ArrayList<Person>(0);
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"),
 		inverseJoinColumns=

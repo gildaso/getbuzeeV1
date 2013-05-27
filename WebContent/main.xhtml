@@ -30,6 +30,9 @@
 						<h:form>
                         	<h:commandLink value="addFriend" actionListener="#{personManager.addOrConfirmFriend}" action="main">
 								<f:param name="friendAdded" id="friendAdded" value="#{person}" />
+                        	</h:commandLink>
+                        	<h:commandLink value="suppressFriend" actionListener="#{personManager.suppressFriend}" action="main">
+								<f:param name="friendSuppressed" id="friendSuppressed" value="#{person}" />
                         	</h:commandLink>	
                         </h:form>						
 					</h:column>
@@ -44,6 +47,9 @@
 						</f:facet>	
 						<h:outputText value="#{friend.login}"/>
 					</h:column>
-	</h:dataTable>														          			
+	</h:dataTable>	
+	<h:form>
+		<h:commandButton value="back"	action="login"/>
+	</h:form>													          			
 	</body>
 </html>          

@@ -77,13 +77,13 @@ public class PersonManager  implements Serializable{
     	personService.updatePerson(loggedInPerson);
     }
     
-//    public void confirmFriend(Person person){
-//    	Person loggedInPerson = accountController.getloggedInPerson();
-//    	Set<Long> friendsAskedMe = loggedInPerson.getFriendsAskedMe();
-//    	friendsAskedMe.add(person.getPersonId());
-//    	loggedInPerson.setFriendsIAskedFs(friendsAskedMe);
-//    	personService.updatePerson(loggedInPerson);
-//    }
+    public void suppressFriend(ActionEvent event){
+		UIParameter param = (UIParameter) event.getComponent()
+                .findComponent("friendAdded");
+		currentPerson = (Person) param.getValue();
+		Person loggedInPerson = accountController.getloggedInPerson();
+		personService.removeFriend(loggedInPerson, currentPerson);
+    }
 
 	public Person getCurrentPerson() {
 		return currentPerson;
