@@ -75,6 +75,7 @@ public class PersonManager  implements Serializable{
     	friendsIAsked.add(currentPerson);
     	loggedInPerson.setFriendsIAsked(friendsIAsked);
     	personService.updatePerson(loggedInPerson);
+    	accountController.getloggedInPerson().setFriendsIAsked(friendsIAsked);
     }
     
     public void suppressFriend(ActionEvent event){
@@ -83,6 +84,10 @@ public class PersonManager  implements Serializable{
 		currentPerson = (Person) param.getValue();
 		Person loggedInPerson = accountController.getloggedInPerson();
 		personService.removeFriend(loggedInPerson, currentPerson);
+		accountController.getloggedInPerson().getFriendsAskedMe().remove(currentPerson);
+		accountController.getloggedInPerson().getFriendsIAsked().remove(currentPerson);
+		accountController.getloggedInPerson().getFriends().remove(currentPerson);
+		myFriends.remove(currentPerson);
     }
 
 	public Person getCurrentPerson() {
