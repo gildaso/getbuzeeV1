@@ -72,22 +72,26 @@ public class PersonManager  implements Serializable{
 		currentPerson = (Person) param.getValue();
 		Person loggedInPerson = accountController.getloggedInPerson();
     	List<Person> friendsIAsked = loggedInPerson.getFriendsIAsked();
+    	List<Person> friendsAskedMe = loggedInPerson.getFriendsIAsked();
     	friendsIAsked.add(currentPerson);
     	loggedInPerson.setFriendsIAsked(friendsIAsked);
     	personService.updatePerson(loggedInPerson);
     	accountController.getloggedInPerson().setFriendsIAsked(friendsIAsked);
+    	if (friendsAskedMe.contains(currentPerson)){
+    		accountController.getloggedInPerson().getFriends().add(currentPerson);
+    	}
     }
     
     public void suppressFriend(ActionEvent event){
 		UIParameter param = (UIParameter) event.getComponent()
                 .findComponent("friendAdded");
-		currentPerson = (Person) param.getValue();
+		Person currentPersonTmp = (Person) param.getValue();
+		currentPerson = personService.findPersonByLogin(currentPersonTmp.getLogin());
 		Person loggedInPerson = accountController.getloggedInPerson();
 		personService.removeFriend(loggedInPerson, currentPerson);
 		accountController.getloggedInPerson().getFriendsAskedMe().remove(currentPerson);
 		accountController.getloggedInPerson().getFriendsIAsked().remove(currentPerson);
 		accountController.getloggedInPerson().getFriends().remove(currentPerson);
-		myFriends.remove(currentPerson);
     }
 
 	public Person getCurrentPerson() {

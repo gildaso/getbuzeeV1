@@ -43,13 +43,13 @@ public class Person implements Serializable{
 	private String firstName;
 	private String name;
 	private String email;
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSASKEDME_ID",referencedColumnName="personId"),
 		inverseJoinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"))
 	private List<Person> friendsAskedMe = new ArrayList<Person>(0);
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"),
 		inverseJoinColumns=
@@ -152,6 +152,40 @@ public class Person implements Serializable{
 
 	public void List(List<Person> friends) {
 		this.friends = friends;
-	}			
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((personId == null) ? 0 : personId.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (personId == null) {
+			if (other.personId != null)
+				return false;
+		} else if (!personId.equals(other.personId))
+			return false;
+		return true;
+	}		
+	
+	
 	
 }
