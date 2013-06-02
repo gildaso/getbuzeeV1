@@ -6,6 +6,7 @@ import getbuzee.exception.CatchException;
 import getbuzee.service.PersonService;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -34,6 +35,10 @@ public class PersonManager  implements Serializable{
     private List<Person> allPersons;
     
     private List<Person> myFriends;
+    
+    private List<Person> personsAskedMe;
+    
+    private List<Person> personsIAsked;
     
     public List<Person> findAllPersons(){
     	this.allPersons = personService.findAllPersons();
@@ -73,20 +78,22 @@ public class PersonManager  implements Serializable{
 		Person loggedInPerson = accountController.getloggedInPerson();
     	List<Person> friendsIAsked = loggedInPerson.getFriendsIAsked();
     	List<Person> friendsAskedMe = loggedInPerson.getFriendsIAsked();
-    	friendsIAsked.add(currentPerson);
-    	loggedInPerson.setFriendsIAsked(friendsIAsked);
-    	personService.updatePerson(loggedInPerson);
-    	accountController.getloggedInPerson().setFriendsIAsked(friendsIAsked);
-    	if (friendsAskedMe.contains(currentPerson)){
-    		accountController.getloggedInPerson().getFriends().add(currentPerson);
+    	
+    	if (!friendsIAsked.contains(currentPerson)){
+	    	friendsIAsked.add(currentPerson);
+	    	loggedInPerson.setFriendsIAsked(friendsIAsked);
+	    	personService.updatePerson(loggedInPerson);
+	    	accountController.getloggedInPerson().setFriendsIAsked(friendsIAsked);
+//	    	if (friendsAskedMe.contains(currentPerson)){
+//	    		accountController.getloggedInPerson().getFriends().add(currentPerson);
+//	    	}
     	}
     }
     
     public void suppressFriend(ActionEvent event){
 		UIParameter param = (UIParameter) event.getComponent()
                 .findComponent("friendAdded");
-		Person currentPersonTmp = (Person) param.getValue();
-		currentPerson = personService.findPersonByLogin(currentPersonTmp.getLogin());
+		Person currentPerson = (Person) param.getValue();		
 		Person loggedInPerson = accountController.getloggedInPerson();
 		personService.removeFriend(loggedInPerson, currentPerson);
 		accountController.getloggedInPerson().getFriendsAskedMe().remove(currentPerson);
@@ -103,8 +110,25 @@ public class PersonManager  implements Serializable{
 	}
 
 	public List<Person> getMyFriends() {
-		this.myFriends = (List<Person>) accountController.getloggedInPerson().getFriends();
+		//this.myFriends = (List<Person>) accountController.getloggedInPerson().getFriends();
+		this.myFriends = personService.findFriends(accountController.getloggedInPerson());
 		return myFriends;
+	}
+	
+	public List<Person> getPersonsAskedMe() throws CloneNotSupportedException{
+//		this.personsAskedMe = personService.findPersonsAskedMe(accountController.getloggedInPerson());
+		Person loggedInPerson = (Person) accountController.getloggedInPerson().clone();
+		this.personsAskedMe = new ArrayList<Person>(loggedInPerson.getFriendsAskedMe());
+		this.personsAskedMe.removeAll(myFriends);
+		return personsAskedMe;
+	}
+	
+	public List<Person> getPersonsIAsked() throws CloneNotSupportedException{
+//		this.personsIAsked = personService.findPersonsIAsked(accountController.getloggedInPerson());
+		Person loggedInPerson = (Person) accountController.getloggedInPerson().clone();
+		this.personsIAsked = new ArrayList<Person>(loggedInPerson.getFriendsIAsked());
+		this.personsIAsked.removeAll(myFriends);
+		return personsIAsked;
 	}
 
 	public void setMyFriends(List<Person> myFriends) {

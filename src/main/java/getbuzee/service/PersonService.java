@@ -68,12 +68,14 @@ public class PersonService implements Serializable {
 
         if (login == null)
             throw new ValidationException("Invalid login");
-
-        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN, Person.class);
+        em.flush();
+        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN,Person.class);
         typedQuery.setParameter("login", login);
 
         try {
-            return typedQuery.getSingleResult();
+            Person person = (Person)typedQuery.getSingleResult();
+            em.refresh(person);
+            return person;
         } catch (NoResultException e) {
             return null;
         }
@@ -88,9 +90,12 @@ public class PersonService implements Serializable {
 
         TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN_PASSWORD, Person.class);
         typedQuery.setParameter("login", login);
-        typedQuery.setParameter("password", password);
+        typedQuery.setParameter("password", password); 
+        
         try {
-        return typedQuery.getSingleResult();
+        Person person = typedQuery.getSingleResult();
+        em.refresh(person);
+        return person;
         } catch (NoResultException e) {
             return null;
         }
@@ -121,6 +126,7 @@ public class PersonService implements Serializable {
     	q.setParameter(3, friend2.getPersonId());
     	q.setParameter(4, friend1.getPersonId());
     	q.executeUpdate();
+    	em.flush();    	
     }
 
     public void removePerson(final Person person) {
@@ -129,6 +135,13 @@ public class PersonService implements Serializable {
 
         em.remove(em.merge(person));
     }    
+    
+    public List<Person> findFriends(Person person){
+    	Query q = em.createQuery("select p from Person p where p.friendsIAsked= :person and p.friendsAskedMe = :person");
+    	q.setParameter("person", person);
+    	List<Person> friends = (List<Person>) q.getResultList();
+    	return friends;
+    }
     
     public void dropTablePerson(){
     	em.createQuery("delete from person p").executeUpdate();

@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 @NamedQuery(name=Person.FIND_BY_LOGIN_PASSWORD, query="select p from Person p where p.login = :login and p.password = :password order by p.personId"),
 @NamedQuery(name=Person.FIND_BY_LOGIN, query="select p from Person p where p.login= :login order by p.personId")
 })
-public class Person implements Serializable{
+public class Person implements Serializable,Cloneable{
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,13 +43,13 @@ public class Person implements Serializable{
 	private String firstName;
 	private String name;
 	private String email;
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSASKEDME_ID",referencedColumnName="personId"),
 		inverseJoinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"))
 	private List<Person> friendsAskedMe = new ArrayList<Person>(0);
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="FRIENDSHIP",joinColumns=
 		@JoinColumn(name="FRIENDSIASKED_ID",referencedColumnName="personId"),
 		inverseJoinColumns=
@@ -186,6 +186,8 @@ public class Person implements Serializable{
 		return true;
 	}		
 	
-	
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 	
 }

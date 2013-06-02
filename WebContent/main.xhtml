@@ -13,8 +13,8 @@
 		<title>Bienvenue dans l'administration du RiderShop</title>
 	</h:head>      
 	<body>	
-	<h1>Here is the list of GetBuzee userz...</h1> 	
-	<h:dataTable
+	<h1>Hello #{accountController.loggedInPerson.login} Here is the list of GetBuzee userz...</h1> 	
+	<h:dataTable align="center"
 					var="person"
 					value="#{personManager.allPersons}">
 					<h:column>
@@ -48,6 +48,28 @@
 						<h:outputText value="#{friend.login}"/>
 					</h:column>
 	</h:dataTable>	
+	<h1>Here is the list of persons you asked for friendship</h1> 	
+	<h:dataTable
+					var="friend"
+					value="#{personManager.personsIAsked}">
+					<h:column>
+						<f:facet name="header">	
+							<h:outputText value="user"/>
+						</f:facet>	
+						<h:outputText value="#{friend.login}"/>
+					</h:column>
+	</h:dataTable>	
+	<h1>Here is the list of persons who want to be your friend</h1> 	
+	<h:dataTable
+					var="friend"
+					value="#{personManager.personsAskedMe}">
+					<h:column>
+						<f:facet name="header">	
+							<h:outputText value="user"/>
+						</f:facet>	
+						<h:outputText value="#{friend.login}"/>
+					</h:column>
+	</h:dataTable>			
 	<h:form>
 		<h:commandButton value="back"	action="login"/>
 	</h:form>													          			
