@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIParameter;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -24,7 +22,12 @@ import utils.Loggable;
 @CatchException
 public class PersonManager  implements Serializable{
 	
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Inject
     private PersonService personService;
     
     @Inject
@@ -60,40 +63,34 @@ public class PersonManager  implements Serializable{
 	}
     
     public boolean isPersonIAsked(Person person){
-    	return accountController.getloggedInPerson().getFriendsIAsked().contains(person);
+    	if (getPersonsIAsked() != null){
+    		return getPersonsIAsked().contains(person);
+    	}
+    	else
+    		return false;
     }
     
     public boolean isPersonAskedMe(Person person){
-    	return accountController.getloggedInPerson().getFriendsAskedMe().contains(person);
+    	return getPersonsAskedMe().contains(person);
     }
     
     public boolean isFriend(Person person){
-    	return false;//accountController.getloggedInPerson().getFriends().contains(person);
+    	return getMyFriends().contains(person);
     }
     
-    public void addOrConfirmFriend(ActionEvent event){
-		UIParameter param = (UIParameter) event.getComponent()
-                .findComponent("friendAdded");
-		currentPerson = (Person) param.getValue();
+    public void addOrConfirmFriend(Person person){
+		currentPerson = person;
 		Person loggedInPerson = accountController.getloggedInPerson();
     	List<Person> friendsIAsked = loggedInPerson.getFriendsIAsked();
-    	List<Person> friendsAskedMe = loggedInPerson.getFriendsIAsked();
     	
-    	if (!friendsIAsked.contains(currentPerson)){
-	    	friendsIAsked.add(currentPerson);
-	    	loggedInPerson.setFriendsIAsked(friendsIAsked);
-	    	personService.updatePerson(loggedInPerson);
-	    	accountController.getloggedInPerson().setFriendsIAsked(friendsIAsked);
-//	    	if (friendsAskedMe.contains(currentPerson)){
-//	    		accountController.getloggedInPerson().getFriends().add(currentPerson);
-//	    	}
+    	if (!friendsIAsked.contains(currentPerson) && !currentPerson.equals(loggedInPerson)){
+    		loggedInPerson.getFriendsIAsked().add(currentPerson);
+	    	personService.updatePerson(loggedInPerson);	    	
     	}
     }
     
-    public void suppressFriend(ActionEvent event){
-		UIParameter param = (UIParameter) event.getComponent()
-                .findComponent("friendAdded");
-		Person currentPerson = (Person) param.getValue();		
+    public void suppressFriend(Person person){
+		currentPerson = person;
 		Person loggedInPerson = accountController.getloggedInPerson();
 		personService.removeFriend(loggedInPerson, currentPerson);
 		accountController.getloggedInPerson().getFriendsAskedMe().remove(currentPerson);
@@ -115,19 +112,17 @@ public class PersonManager  implements Serializable{
 		return myFriends;
 	}
 	
-	public List<Person> getPersonsAskedMe() throws CloneNotSupportedException{
-//		this.personsAskedMe = personService.findPersonsAskedMe(accountController.getloggedInPerson());
-		Person loggedInPerson = (Person) accountController.getloggedInPerson().clone();
+	public List<Person> getPersonsAskedMe(){
+		Person loggedInPerson = (Person) accountController.getloggedInPerson();
 		this.personsAskedMe = new ArrayList<Person>(loggedInPerson.getFriendsAskedMe());
-		this.personsAskedMe.removeAll(myFriends);
+		if (this.personsAskedMe != null && myFriends != null) this.personsAskedMe.removeAll(myFriends);
 		return personsAskedMe;
 	}
 	
-	public List<Person> getPersonsIAsked() throws CloneNotSupportedException{
-//		this.personsIAsked = personService.findPersonsIAsked(accountController.getloggedInPerson());
-		Person loggedInPerson = (Person) accountController.getloggedInPerson().clone();
+	public List<Person> getPersonsIAsked(){
+		Person loggedInPerson = (Person) accountController.getloggedInPerson();
 		this.personsIAsked = new ArrayList<Person>(loggedInPerson.getFriendsIAsked());
-		this.personsIAsked.removeAll(myFriends);
+		if (this.personsIAsked != null && myFriends != null) this.personsIAsked.removeAll(myFriends);
 		return personsIAsked;
 	}
 

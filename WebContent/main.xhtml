@@ -28,12 +28,11 @@
 							<h:outputText value="action"/>
 						</f:facet>
 						<h:form>
-                        	<h:commandLink value="addFriend" actionListener="#{personManager.addOrConfirmFriend}" action="main">
-								<f:param name="friendAdded" id="friendAdded" value="#{person}" />
-                        	</h:commandLink>
-                        	<h:commandLink value="suppressFriend" actionListener="#{personManager.suppressFriend}" action="main">
-								<f:param name="friendSuppressed" id="friendSuppressed" value="#{person}" />
-                        	</h:commandLink>	
+                        	<h:commandLink value="addFriend" actionListener="#{personManager.addOrConfirmFriend(person)}" action="main" rendered="#{!personManager.isPersonIAsked(person) and !personManager.isPersonAskedMe(person) and !personManager.isFriend(person)}"/>
+                        	<h:commandLink value="confirmFriend" actionListener="#{personManager.addOrConfirmFriend(person)}" action="main" rendered="#{personManager.isPersonAskedMe(person)}"/>
+                        	<h:commandLink value="suppressFriend" actionListener="#{personManager.suppressFriend(person)}" action="main" rendered="#{personManager.isFriend(person)}"/>
+                        	<h:commandLink value="refuseFriend" actionListener="#{personManager.suppressFriend(person)}" action="main" rendered="#{personManager.isPersonAskedMe(person)}"/>
+                        	<h:commandLink value="cancelFriend" actionListener="#{personManager.suppressFriend(person)}" action="main" rendered="#{personManager.isPersonIAsked(person)}"/>
                         </h:form>						
 					</h:column>
 	</h:dataTable>	
