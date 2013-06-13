@@ -85,7 +85,7 @@ public class PersonManager  implements Serializable{
     	
     	if (!friendsIAsked.contains(currentPerson) && !currentPerson.equals(loggedInPerson)){
     		loggedInPerson.getFriendsIAsked().add(currentPerson);
-	    	personService.updatePerson(loggedInPerson);	    	
+    		loggedInPerson = personService.updatePerson(loggedInPerson);	    	
     	}
     }
     
@@ -96,6 +96,7 @@ public class PersonManager  implements Serializable{
 		accountController.getloggedInPerson().getFriendsAskedMe().remove(currentPerson);
 		accountController.getloggedInPerson().getFriendsIAsked().remove(currentPerson);
 		accountController.getloggedInPerson().getFriends().remove(currentPerson);
+		accountController.setloggedInPerson(personService.findPersonByLogin(loggedInPerson.getLogin()));
     }
 
 	public Person getCurrentPerson() {
