@@ -15,7 +15,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -30,9 +32,10 @@ import javax.validation.constraints.Size;
 @NamedQuery(name=Person.FIND_BY_LOGIN, query="select p from Person p where p.login= :login order by p.personId")
 })
 public class Person implements Serializable,Cloneable{
+	@TableGenerator(name = "personGen", table = "PERSISTENCE_PERSON_SEQUENCE_GENERATOR", pkColumnName = "GEN_KEY", valueColumnName = "GEN_VALUE", pkColumnValue = "PERSON_ID", allocationSize = 10)
 	@Id
 	@NotNull
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.TABLE, generator="personGen")
 	private Long personId;
     @getbuzee.constraints.Login
     private String login;

@@ -107,14 +107,13 @@ public class PersonService implements Serializable {
         return allPersons;
     }
 
-    public Person updatePerson(final Person person) {
+    public Person updatePerson(Person person) {
 
         // Make sure the object is valid
         if (person == null)
             throw new ValidationException("Person object is null");
-
-        // Update the object in the database
-        em.merge(person);
+        // Update the object in the database        
+        person = em.merge(person);       
 
         return person;
     }
@@ -126,7 +125,6 @@ public class PersonService implements Serializable {
     	q.setParameter(3, friend2.getPersonId());
     	q.setParameter(4, friend1.getPersonId());
     	q.executeUpdate();
-    	em.flush();    	
     }
 
     public void removePerson(final Person person) {
@@ -144,7 +142,9 @@ public class PersonService implements Serializable {
     }
     
     public void dropTablePerson(){
-    	em.createQuery("delete from person p").executeUpdate();
+    	em.createNativeQuery("delete from friendship").executeUpdate();
+    	em.createNativeQuery("delete from person").executeUpdate();
+    	em.flush();
     }
 
 	public List<Person> getAllPersons() {

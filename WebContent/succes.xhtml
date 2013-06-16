@@ -12,6 +12,12 @@
 		<title>Bienvenue dans l'administration du RiderShop</title>
 	</h:head>      
 	<body>	
-	<h1>succes!!</h1>            			
+	<h1>Congratulations #{accountController.loggedInPerson.login}! You successfully created your account!!</h1>
+	<h:panelGrid columns="2">
+	<h:form>
+		<h:commandButton value="retour à l'accueil" action="login"/>
+		<h:commandButton value="Accéder à ma page GetBuzee" action="main" />
+	</h:form>	
+	</h:panelGrid>            			
 	</body>
 </html>          

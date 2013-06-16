@@ -38,7 +38,7 @@ public class ConfigBean {
 
     @PostConstruct
     public void createData() {
-    	//personService.dropTablePerson();
+    	personService.dropTablePerson();
     	if (personService.findPersonByLoginPassword("gildaso","tonton") == null && personService.findPersonByLoginPassword("roberto","tonton") == null && personService.findPersonByLoginPassword("ernesto","tonton")== null){
 	    	personService.createPerson(new Person("gildaso","tonton"));
 	    	personService.createPerson(new Person("roberto","tonton"));
