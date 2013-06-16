@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:head>
+		<h:outputStylesheet library="css" name="stylesheet.css"/>
+		<title>Welcome to GetBuzee</title>
+	</h:head>      
+	<body>	
+	<h1>You are on #{personManager.currentPerson.login}'s page</h1>
+	<h:panelGrid id="panel" columns="2" border="1" 
+         cellpadding="10" cellspacing="1">
+         <f:facet name="header">
+            <h:outputText value="Informations about #{personManager.currentPerson.login}"/>
+         </f:facet>
+         <h:outputLabel value="Username" />
+         <h:outputText value="#{personManager.currentPerson.login}"/>
+     	<h:outputLabel value="Password" />
+         <h:outputText value="#{personManager.currentPerson.password}"/>         
+     </h:panelGrid>    
+     <h:form>
+     	<h:commandButton value="Back" action="main"/>
+     </h:form>
+</body>	
+</html>          
